@@ -23,6 +23,8 @@
  * ========================================================================= */
 
 /*! History:
+ *  19 Feb 2020 : __wfi() Instruction added 
+ *  VERSION     : 1.1.0
  *  30 Sep 2019 : Base lined
  *  VERSION     : 1.0.0
  */
@@ -64,18 +66,21 @@ MACRO DEFINITION
 
 #define TC9562_GPIO3_OUTPUT         DEF_DISABLED  
 
-static const FW_Version_t version = {'R', 1, 0, 0};
+static const FW_Version_t version = {'R', 1, 1, 0};
 
 /*=====================================================================
 FUNCTION PROTOTYPES
 ==================================================================== */
+#ifdef USE_SW_DELAY
 static void delay( const uint32_t uiMs );
+#endif
 static void Enable_Interrupts_for_WOL(void) ;
 static void Configure_PME(void) ;
 static void Enter_into_Low_Power_Mode(void) ;
 /*=====================================================================
 FUNCTION DEFINITION
 ==================================================================== */
+#ifdef USE_SW_DELAY
 /*
 *    Function    :    delay( uiMS )
 *    Purpose     :    Delay by uiMS time
@@ -96,6 +101,7 @@ static void delay( const uint32_t uiMs )
   return;
 }
 /* End of delay() */
+#endif
 
 /*  Function     :    Hw_Reg_Write32( uiAddr_Base, uiOffset, uiVal )
 *    Purpose     :    write data to an address
@@ -404,8 +410,7 @@ int32_t main ( void )
   
   while ( TC9562_ONE ) 
   { 
-    /* about 10ms */
-    delay( TC9562_TEN ) ;
+    __wfi();
   }
 }
 /* End of main */
